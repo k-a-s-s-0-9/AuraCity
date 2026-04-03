@@ -1,27 +1,18 @@
 package model.buildings;
+
 import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import model.agent.Citizen;
 
-public class Housing {
-    // Unique identifier for buildings and its properties
-    private final String id;
-    private int max_capacity;
-    private int currentOccupants;
+class housing extends building {
+    // Housing-specific properties
+    private int rentCost;
 
-    //list of citizens currently residing in this housing unit
-    private List<Citizen> occupants;
-
-    // Constructor
-    public Housing(int max_capacity) {
-        this.id = UUID.randomUUID().toString();
-        this.max_capacity = max_capacity;
-        this.currentOccupants = 0;
-        this.occupants = new ArrayList<>();
+    public housing(int max_capacity, int rentCost) {
+        super(max_capacity, currentOccupants);
+        this.rentCost = rentCost;
+        maintenanceCost = 100; // default value, can be modified as needed
     }
 
-    // Expose the final housing id so other objects (e.g. Citizen) can reference it
-    public String getId() { return id; }
-
+    public int getRentCost() { return rentCost; }
 }
