@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import java.awt.Dimension;
 
-public class Main {
+public class auraCityTycoonLauncher {
 
     public static void main(String[] args) {
         // Swing UI creation must always happen on the Event Dispatch Thread (EDT)
