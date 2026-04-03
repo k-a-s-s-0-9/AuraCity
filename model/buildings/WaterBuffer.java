@@ -5,25 +5,26 @@ import java.util.*;
 
 public class WaterBuffer extends building {
     // WaterBuffer-specific properties
-    private UUID id;
-    private int max_waterOutput = 100;
-    private int max_waterInput = 100;
-    private int waterOutput;
-    private int waterInput;
+    private int max_waterOutflow = 100;
+    private int max_waterInflow = 100;
+    private int waterOutflow;
+    private int waterInflow;
     private int waterCapacity = 100; // Example capacity
     private int flowRate = 10; // Example flow rate
 
     // Constructor
-    public WaterBuffer(UUID id, int waterOutput, int waterInput) {
+    public WaterBuffer(UUID id, int waterOutflow, int waterInflow) throws OverFlowException, UnderflowException {
         this.id = id;
-        this.waterOutput = waterOutput;
-        this.waterInput = waterInput;
+        this.waterOutflow = waterOutflow;
+        this.waterInflow = waterInflow;
     }
 
     // Getters
     public UUID getId() { return id; }
-    public int getWaterOutput() { return waterOutput; }
-    public int getWaterInput() { return waterInput; }
+    public int getWaterOutflow() { return waterOutflow; }
+    public int getWaterInflow() { return waterInflow; }
+    public int getWaterCapacity() { return waterCapacity; }
+    public int getFlowRate() { return flowRate; }
 }
 
 public class OverFlowException extends Exception {
