@@ -1,4 +1,5 @@
 package model.agent;
+
 import java.util.UUID;
 import model.buildings.Housing;
 
