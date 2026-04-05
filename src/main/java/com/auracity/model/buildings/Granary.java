@@ -22,4 +22,3 @@ public class Granary extends building {
         // how foodProduction from farms translates to updates in the granary
         return 0; // Placeholder implementation
     }
-}

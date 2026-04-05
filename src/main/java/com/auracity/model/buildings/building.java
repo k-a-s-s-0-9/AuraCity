@@ -7,21 +7,22 @@ import model.agent.Citizen;
 public class building {
     // Unique identifier for buildings and its properties
     private final String id;
+    private int max_capacity;
+    private int currentOccupants;
 
-    private int max_occupants;
+    //list of citizens currently residing in this housing unit
     private List<Citizen> occupants;
-    private int currentOccupants = occupants.size();
 
     // structural properties (e.g. durability, maintenance cost) can be added here as needed
     private int structuralIntegrity;
     protected int maintenanceCost;
 
     // Constructor
-    public building(int max_occupants, int currentOccupants, List<Citizen> occupants) {
+    public building(int max_capacity) {
         this.id = UUID.randomUUID().toString();
-        this.max_occupants = max_occupants;
-        this.currentOccupants = currentOccupants;
-        this.occupants = occupants;
+        this.max_capacity = max_capacity;
+        this.currentOccupants = 0;
+        this.occupants = new ArrayList<>();
         this.structuralIntegrity = 100;
         this.maintenanceCost = 0; // Default value, can be modified
     }

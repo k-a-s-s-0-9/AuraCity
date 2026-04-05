@@ -6,15 +6,12 @@ import model.agent.Citizen;
 
 public class FoodFarms extends building {
     // Farms-specific properties
-    private int foodProduction = 5; // Base food production per worker
+    private int foodProduction;
 
-    // Constructor
-    public FoodFarms(int max_occupants, int foodProduction) {
-        super(max_occupants, 0, new ArrayList<>());
+    public FoodFarms(int max_capacity, int foodProduction) {
+        super(max_capacity);
         this.foodProduction = foodProduction;
-        this.structuralIntegrity = 100; // Default value
-        this.maintenanceCost = 100; // default value
-
+        maintenanceCost = 100; // default value
     }
 
     public int getFoodProduction() { 
