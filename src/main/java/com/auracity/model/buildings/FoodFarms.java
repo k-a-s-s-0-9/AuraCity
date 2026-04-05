@@ -1,15 +1,13 @@
-package model.buildings;
+package com.auracity.model.buildings;
 
-import java.util.UUID;
 import java.util.*;
-import model.agent.Citizen;
 
 public class FoodFarms extends building {
     // Farms-specific properties
     private int foodProduction;
 
-    public FoodFarms(int max_capacity, int foodProduction) {
-        super(max_capacity);
+    public FoodFarms(int max_occupants, int foodProduction) {
+        super(max_occupants, 0, new ArrayList<>()); // Initialize with 0 occupants and an empty list
         this.foodProduction = foodProduction;
         maintenanceCost = 100; // default value
     }

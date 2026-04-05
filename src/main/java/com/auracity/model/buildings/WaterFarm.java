@@ -1,18 +1,16 @@
-package model.buildings;
+package com.auracity.model.buildings;
 
-import java.util.UUID;
 import java.util.*;
-import model.agent.Citizen;
+import com.auracity.model.agent.Citizen;
 
 public class WaterFarm extends building {
     // WaterFarm-specific properties
     private int waterOutput;
 
 
-    public WaterFarm(UUID id, int max_capacity, int waterOutput) {
-        super(id, max_capacity);
+    public WaterFarm(int max_occupants, List<Citizen> occupants, int waterOutput) {
+        super(max_occupants, 0, occupants);
         this.waterOutput = waterOutput;
     }
-
     public int getWaterOutput() { return waterOutput; }
 }

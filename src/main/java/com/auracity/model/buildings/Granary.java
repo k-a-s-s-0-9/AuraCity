@@ -1,24 +1,23 @@
-package model.buildings;
+package com.auracity.model.buildings;
 
-import java.util.UUID;
 import java.util.*;
-import model.agent.Citizen;
+import com.auracity.model.agent.Citizen;
 
 public class Granary extends building {
     // Granary-specific properties
     private int storageCapacity;
 
-    public Granary(int max_occupants, int storageCapacity) {
-        super(max_occupants, 0, new ArrayList<>());
+    // Constructor
+    public Granary(int max_occupants, int storageCapacity, List<Citizen> occupants, int structuralIntegrity, int maintenanceCost) {
+        super(max_occupants, structuralIntegrity, occupants);
         this.storageCapacity = storageCapacity;
-        this.maintenanceCost = 100; // default value
-        this.structuralIntegrity = 100; // default value
-        this.occupants = new ArrayList<>(); // Initialize occupants list
+        this.maintenanceCost = maintenanceCost;
     }
 
     public int getStorageCapacity() { return storageCapacity; }
-
+    public int getMaintenanceCost() { return maintenanceCost; }
     public int loadingCapacity() {
         // how foodProduction from farms translates to updates in the granary
         return 0; // Placeholder implementation
     }
+}

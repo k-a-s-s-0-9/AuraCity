@@ -1,7 +1,7 @@
-package model.agent;
+package com.auracity.model.agent;
 
 import java.util.UUID;
-import model.buildings.Housing;
+import com.auracity.model.buildings.Housing;
 
 public class Citizen {
     // Unique identifier for tracking specific agents

@@ -1,6 +1,6 @@
-package model.buildings;
+package com.auracity.model.buildings;
 
-import java.util.UUID;
+import com.auracity.model.agent.Citizen;
 import java.util.*;
 
 public class WaterBuffer extends building {
@@ -13,27 +13,26 @@ public class WaterBuffer extends building {
     private int flowRate = 10; // Example flow rate
 
     // Constructor
-    public WaterBuffer(UUID id, int waterOutflow, int waterInflow) throws OverFlowException, UnderflowException {
-        this.id = id;
-        this.waterOutflow = waterOutflow;
-        this.waterInflow = waterInflow;
+    public WaterBuffer(int max_occupants, int currentOccupants, List<Citizen> occupants) throws OverFlowException, UnderflowException {
+        super(max_occupants, currentOccupants, occupants);
+        this.waterOutflow = 0;
+        this.waterInflow = 0;
     }
 
     // Getters
-    public UUID getId() { return id; }
     public int getWaterOutflow() { return waterOutflow; }
     public int getWaterInflow() { return waterInflow; }
     public int getWaterCapacity() { return waterCapacity; }
     public int getFlowRate() { return flowRate; }
 }
 
-public class OverFlowException extends Exception {
+class OverFlowException extends Exception {
     public OverFlowException() {
         super("Water output exceeds maximum capacity");
     }
 }
 
-public class UnderflowException extends Exception {
+class UnderflowException extends Exception {
     public UnderflowException() {
         super("Water input is below minimum required");
     }

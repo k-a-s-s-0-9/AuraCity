@@ -1,13 +1,13 @@
-package model.buildings;
+package com.auracity.model.buildings;
 
 import java.util.UUID;
 import java.util.*;
-import model.agent.Citizen;
+import com.auracity.model.agent.Citizen;
 
 public class building {
     // Unique identifier for buildings and its properties
-    private final String id;
-    private int max_capacity;
+    protected final String id;
+    private int max_occupants;
     private int currentOccupants;
 
     //list of citizens currently residing in this housing unit
@@ -18,11 +18,11 @@ public class building {
     protected int maintenanceCost;
 
     // Constructor
-    public building(int max_capacity) {
+    public building(int max_occupants, int currentOccupants, List<Citizen> occupants) {
         this.id = UUID.randomUUID().toString();
-        this.max_capacity = max_capacity;
-        this.currentOccupants = 0;
-        this.occupants = new ArrayList<>();
+        this.max_occupants = max_occupants;
+        this.currentOccupants = currentOccupants;
+        this.occupants = new ArrayList<>(occupants);
         this.structuralIntegrity = 100;
         this.maintenanceCost = 0; // Default value, can be modified
     }
@@ -35,12 +35,45 @@ public class building {
         }
     }
 
+    // Manage occupants and keep the current occupant count in sync with the list
+    public boolean addOccupant(Citizen occupant) {
+        if (currentOccupants >= max_occupants) {
+            return false;
+        }
+        else {
+            occupants.add(occupant);
+            currentOccupants = occupants.size();
+            return true; // Successfully added occupant
+        }
+    }
+
+    public boolean removeOccupant(Citizen occupant) {
+        if (occupants.remove(occupant)) {
+            currentOccupants = occupants.size();
+            return true;
+        }
+        return false;
+    }
+
+    public List<Citizen> getOccupants() {
+        return Collections.unmodifiableList(occupants);
+    }
+
     // Expose current occupant count for subclasses and external systems
     public int getCurrentOccupants() {
         return currentOccupants;
     }
 
+    // Expose the maximum capacity of the building
+    public int getMaxCapacity() {
+        return max_occupants;
+    }
+
     // Expose the final building id so other objects (e.g. Citizen) can reference it
     public String getId() { return id; }
+
+    public int getStructuralIntegrity() { return structuralIntegrity; }
+    
+    public int getMaintenanceCost() { return maintenanceCost; }
 
 }

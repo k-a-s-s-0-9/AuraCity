@@ -1,12 +1,14 @@
-import engine.ResourceManager;
-import ui.MapPanel;
+package com.auracity;
+
+import com.auracity.engine.ResourceManager;
+import com.auracity.ui.MapPanel;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import java.awt.Dimension;
 
-public class auraCityTycoonLauncher {
+public class AuraCityTycoonLauncher {
 
     public static void main(String[] args) {
         // Swing UI creation must always happen on the Event Dispatch Thread (EDT)
