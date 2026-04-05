@@ -15,7 +15,7 @@ public class building {
 
     // structural properties (e.g. durability, maintenance cost) can be added here as needed
     private int structuralIntegrity;
-    private int maintenanceCost;
+    protected int maintenanceCost;
 
     // Constructor
     public building(int max_capacity) {
@@ -25,6 +25,19 @@ public class building {
         this.occupants = new ArrayList<>();
         this.structuralIntegrity = 100;
         this.maintenanceCost = 0; // Default value, can be modified
+    }
+
+    public void structuralDegradation() {
+        // Simple degradation logic (can be expanded with more complex behavior)
+        structuralIntegrity -= 1; // Decrease integrity by 1 unit per time step
+        if (structuralIntegrity < 0) {
+            structuralIntegrity = 0; // Ensure it doesn't go negative
+        }
+    }
+
+    // Expose current occupant count for subclasses and external systems
+    public int getCurrentOccupants() {
+        return currentOccupants;
     }
 
     // Expose the final building id so other objects (e.g. Citizen) can reference it
