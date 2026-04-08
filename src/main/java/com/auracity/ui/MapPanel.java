@@ -1,6 +1,10 @@
 package com.auracity.ui;
 
 import javax.swing.JPanel;
+
+import com.auracity.engine.SelectionManager;
+import com.auracity.model.buildings.BuildingType;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,6 +20,22 @@ public class MapPanel extends JPanel {
         // Essential for smooth custom painting in Swing
         setDoubleBuffered(true);
         setBackground(new Color(30, 30, 34)); // Dark mode base
+
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                int tileSize = 64; // Match your asset size
+                int gridX = e.getX() / tileSize;
+                int gridY = e.getY() / tileSize;
+
+                BuildingType toPlace = SelectionManager.getSelection();
+
+                if (toPlace != null) {
+                    placeBuildingOnGrid(gridX, gridY, toPlace);
+                    repaint(); 
+                }
+            }
+        });
     }
 
     protected void paintComponent(Graphics g) {
@@ -56,5 +76,9 @@ public class MapPanel extends JPanel {
     // This will be called by your Game Loop (e.g., a Swing Timer or your Tick Thread)
     public void refreshFrame() {
         repaint();
+    }
+
+    private void placeBuildingOnGrid(int gridX, int gridY, BuildingType type) {
+        System.out.println("Placing " + type.getLabel() + " at (" + gridX + ", " + gridY + ")");
     }
 }
