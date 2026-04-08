@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import com.auracity.model.building.BuildingType;
 
-public class SidebarPanel extends JPanel {
+class SidebarPanel extends JPanel {
     public SidebarPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Build Menu"));
