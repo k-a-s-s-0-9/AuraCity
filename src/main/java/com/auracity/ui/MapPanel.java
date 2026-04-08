@@ -32,7 +32,7 @@ public class MapPanel extends JPanel {
     }
 
     private void renderGridLayer(Graphics2D g2d) {
-        g2d.setColor(new Color(50, 50, 55));
+        g2d.setColor(new Color(0, 0, 50, 50)); // Semi-transparent grid lines
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
                 g2d.drawRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
