@@ -2,10 +2,11 @@ package com.auracity.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import com.auracity.model.building.BuildingType;
+import com.auracity.model.buildings.BuildingType;
+import com.auracity.engine.SelectionManager;
 
-class SidebarPanel extends JPanel {
-    public SidebarPanel() {
+public class HudPanel extends JPanel {
+    public HudPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Build Menu"));
 
@@ -18,7 +19,7 @@ class SidebarPanel extends JPanel {
 
     private void addButton(String label, BuildingType type) {
         JButton btn = new JButton(label);
-        btn.setMaximumSize(new Dimension(Double.valueOf(Math.PI).intValue() * 50, 40)); 
+        btn.setMaximumSize(new Dimension(150, 40));
         btn.addActionListener(e -> SelectionManager.setSelection(type));
         add(btn);
         add(Box.createRigidArea(new Dimension(0, 5))); // Spacer
