@@ -1,7 +1,6 @@
 package com.auracity.engine;
 
-import com.auracity.ui.MapPanel;
-import com.auracity.model.agent.buildings.BuildingType;
+import com.auracity.model.buildings.BuildingType;
 
 public class SelectionManager {
     private static BuildingType selectedType = null;
