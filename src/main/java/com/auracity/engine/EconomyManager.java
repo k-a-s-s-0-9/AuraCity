@@ -115,4 +115,8 @@ implements TimeListener {
     public double getCityTreasury() {
         return cityTreasury;
     }
+    
+    public void addFunds(double amount) {
+        this.cityTreasury += amount;
+    }
 }

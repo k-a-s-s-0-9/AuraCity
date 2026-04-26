@@ -74,6 +74,9 @@ public class GameCanvas extends Canvas {
                 }
             }
         });
+
+        // Generate the test environment
+        generateSampleWorld();
     }
 
     // Factory method to map Enums to your physical classes
@@ -86,7 +89,8 @@ public class GameCanvas extends Canvas {
             case WATER_FARM: return new WaterFarm();
             case WATER_TOWER: return new WaterBuffer();
             case BANK: return new Bank();
-            default: throw new IllegalArgumentException("Unknown building type");
+            case WORK_OFFICE: return new WorkOffice();
+            default: throw new IllegalArgumentException("Unknown building type: " + type);
         }
     }
 
@@ -149,6 +153,44 @@ public class GameCanvas extends Canvas {
             // Draw the citizen as a circle (radius 10)
             // We subtract 5 to ensure the circle's center is exactly at c.getX()
             gc.fillOval(c.getX() - 5, c.getY() - 5, 10, 10); 
+        }
+    }
+
+    // --- TESTING TOOLS ---
+
+    public void generateSampleWorld() {
+        System.out.println("Initializing Sample World Engine...");
+
+        // 1. Inject Seed Money
+        economyManager.addFunds(50000.0);
+
+        // 2. City Center (Bank & Utilities)
+        placeBuildingProgrammatically(BuildingType.BANK, 10, 7);
+        placeBuildingProgrammatically(BuildingType.POWER_PLANT, 2, 2);
+        placeBuildingProgrammatically(BuildingType.WATER_TOWER, 3, 2);
+
+        // 3. Commercial / Industrial District
+        placeBuildingProgrammatically(BuildingType.WORK_OFFICE, 14, 5);
+        placeBuildingProgrammatically(BuildingType.FARM, 15, 5);
+
+        // 4. Residential District (This will trigger Citizens to spawn!)
+        placeBuildingProgrammatically(BuildingType.TOWN_HOUSE, 5, 10);
+        placeBuildingProgrammatically(BuildingType.TOWN_HOUSE, 6, 10);
+        placeBuildingProgrammatically(BuildingType.TOWN_HOUSE, 5, 11);
+        placeBuildingProgrammatically(BuildingType.TOWN_HOUSE, 6, 11);
+    }
+
+    private void placeBuildingProgrammatically(BuildingType type, int gridX, int gridY) {
+        // Boundary safety check
+        if (gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) return;
+
+        Building b = createBuildingInstance(type);
+        b.setLocation(gridX, gridY);
+        grid[gridX][gridY] = b;
+
+        // Hook into the population simulation
+        if (b instanceof Housing) {
+            popManager.addHome((Housing) b);
         }
     }
 }
