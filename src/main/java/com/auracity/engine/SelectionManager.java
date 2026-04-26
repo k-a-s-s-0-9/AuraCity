@@ -1,20 +1,54 @@
 package com.auracity.engine;
 
-import com.auracity.model.buildings.BuildingType;
+import com.auracity.models.agents.Citizen;
+import com.auracity.models.buildings.ResidentialBuilding;
 
 public class SelectionManager {
-    private static BuildingType selectedType = null;
 
-    public static void setSelection(BuildingType type) {
-        selectedType = type;
-        System.out.println("Selected: " + type);
+    private Object selected;
+
+    public void select(Object obj) {
+
+        selected = obj;
     }
 
-    public static BuildingType getSelection() {
-        return selectedType;
+    public void clearSelection() {
+
+        selected = null;
     }
 
-    public static void clearSelection() {
-        selectedType = null;
+    public Object getSelected() {
+
+        return selected;
+    }
+
+    // ---------------- Type-safe helpers ----------------
+
+    public boolean isCitizenSelected() {
+
+        return selected instanceof Citizen;
+    }
+
+    public boolean isBuildingSelected() {
+
+        return selected instanceof ResidentialBuilding;
+    }
+
+    public Citizen getSelectedCitizen() {
+
+        if (isCitizenSelected()) {
+            return (Citizen) selected;
+        }
+
+        return null;
+    }
+
+    public ResidentialBuilding getSelectedBuilding() {
+
+        if (isBuildingSelected()) {
+            return (ResidentialBuilding) selected;
+        }
+
+        return null;
     }
 }
