@@ -1,25 +1,13 @@
 package com.auracity.model.buildings;
 
-import java.util.*;
-
-public class Housing extends building {
-    // Housing-specific properties
+public class Housing extends Building {
     private int rentCost;
-    private String homeId;
 
-    // Constructor
-    public Housing(int max_occupants, int rentCost) {
-        super(max_occupants, 0, new ArrayList<>());
-
-        // Initialize buildingID as homeId for citizens to reference when they move in
-        this.homeId = this.id;
-        this.homeId = getId(); // Set homeId to the unique building ID
-
-        this.rentCost = rentCost;
-        maintenanceCost = 100; // default value, can be modified as needed
+    public Housing() {
+        super(BuildingType.TOWN_HOUSE); // Tells the base class what stats to load
+        this.rentCost = 20; 
     }
 
     public int getRentCost() { return rentCost; }
-    public String getHomeId() { return homeId; }
-    
+    public String getHomeId() { return id; } // id is inherited from Building
 }

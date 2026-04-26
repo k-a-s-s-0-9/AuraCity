@@ -1,54 +1,24 @@
 package com.auracity.engine;
 
-import com.auracity.models.agents.Citizen;
-import com.auracity.models.buildings.ResidentialBuilding;
+import com.auracity.model.buildings.BuildingType;
+import com.auracity.model.agent.Citizen;
 
 public class SelectionManager {
+    private Object hoveredEntity;      // What the mouse is over
+    private Object selectedEntity;     // What is clicked (Inspection)
+    private BuildingType buildModeType; // What we are trying to place
 
-    private Object selected;
-
-    public void select(Object obj) {
-
-        selected = obj;
+    public void setBuildMode(BuildingType type) {
+        this.buildModeType = type;
+        this.selectedEntity = null; // Clear inspection when building
     }
 
-    public void clearSelection() {
-
-        selected = null;
+    public void selectEntity(Object obj) {
+        this.selectedEntity = obj;
+        this.buildModeType = null; // Exit build mode when inspecting
     }
 
-    public Object getSelected() {
-
-        return selected;
-    }
-
-    // ---------------- Type-safe helpers ----------------
-
-    public boolean isCitizenSelected() {
-
-        return selected instanceof Citizen;
-    }
-
-    public boolean isBuildingSelected() {
-
-        return selected instanceof ResidentialBuilding;
-    }
-
-    public Citizen getSelectedCitizen() {
-
-        if (isCitizenSelected()) {
-            return (Citizen) selected;
-        }
-
-        return null;
-    }
-
-    public ResidentialBuilding getSelectedBuilding() {
-
-        if (isBuildingSelected()) {
-            return (ResidentialBuilding) selected;
-        }
-
-        return null;
-    }
+    public BuildingType getBuildModeType() { return buildModeType; }
+    public Object getSelectedEntity() { return selectedEntity; }
+    public boolean isBuildMode() { return buildModeType != null; }
 }

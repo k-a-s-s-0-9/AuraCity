@@ -1,4 +1,4 @@
-package com.auracity.models.agents;
+package com.auracity.model.agent;
 
 import com.auracity.engine.TimeSnapshot;
 

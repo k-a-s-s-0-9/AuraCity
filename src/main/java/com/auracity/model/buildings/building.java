@@ -1,50 +1,59 @@
 package com.auracity.model.buildings;
 
 import java.util.UUID;
-import java.util.*;
-import com.auracity.model.agent.Citizen;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import com.auracity.model.agent.Citizen; // Note the 'models' plural to match your bro's files
 
-public class building {
-    // Unique identifier for buildings and its properties
+public abstract class Building {
+    
     protected final String id;
-    private int max_occupants;
+    protected final BuildingType type; // The reference to the Blueprint
+    
+    protected int structuralIntegrity;
+    protected int maintenanceCost;
+    
+    // Occupant tracking
     private int currentOccupants;
-
-    //list of citizens currently residing in this housing unit
     private List<Citizen> occupants;
 
-    // structural properties (e.g. durability, maintenance cost) can be added here as needed
-    private int structuralIntegrity;
-    protected int maintenanceCost;
-
     // Constructor
-    public building(int max_occupants, int currentOccupants, List<Citizen> occupants) {
+    public Building(BuildingType type) {
         this.id = UUID.randomUUID().toString();
-        this.max_occupants = max_occupants;
-        this.currentOccupants = currentOccupants;
-        this.occupants = new ArrayList<>(occupants);
+        this.type = type;
         this.structuralIntegrity = 100;
-        this.maintenanceCost = 0; // Default value, can be modified
+        
+        // Base maintenance cost off the purchase cost (e.g., 5%)
+        this.maintenanceCost = (int)(type.getCost() * 0.05); 
+        
+        this.currentOccupants = 0;
+        this.occupants = new ArrayList<>();
     }
+
+    // --- Core Logic ---
 
     public void structuralDegradation() {
-        // Simple degradation logic (can be expanded with more complex behavior)
-        structuralIntegrity -= 1; // Decrease integrity by 1 unit per time step
+        structuralIntegrity -= 1;
         if (structuralIntegrity < 0) {
-            structuralIntegrity = 0; // Ensure it doesn't go negative
+            structuralIntegrity = 0;
         }
     }
 
-    // Manage occupants and keep the current occupant count in sync with the list
+    // Calculate actual power usage/generation based on building health
+    public double getActualPowerContribution() {
+        return type.getPowerRate() * (structuralIntegrity / 100.0);
+    }
+
+    // --- Occupant Logic (From your Bro's original code) ---
+
     public boolean addOccupant(Citizen occupant) {
-        if (currentOccupants >= max_occupants) {
+        if (currentOccupants >= type.getMaxOccupants()) {
             return false;
         }
-        else {
-            occupants.add(occupant);
-            currentOccupants = occupants.size();
-            return true; // Successfully added occupant
-        }
+        occupants.add(occupant);
+        currentOccupants = occupants.size();
+        return true;
     }
 
     public boolean removeOccupant(Citizen occupant) {
@@ -55,25 +64,16 @@ public class building {
         return false;
     }
 
-    public List<Citizen> getOccupants() {
-        return Collections.unmodifiableList(occupants);
+    public boolean hasSpace() {
+        return currentOccupants < type.getMaxOccupants();
     }
 
-    // Expose current occupant count for subclasses and external systems
-    public int getCurrentOccupants() {
-        return currentOccupants;
-    }
+    // --- Getters ---
 
-    // Expose the maximum capacity of the building
-    public int getMaxCapacity() {
-        return max_occupants;
-    }
-
-    // Expose the final building id so other objects (e.g. Citizen) can reference it
     public String getId() { return id; }
-
+    public BuildingType getType() { return type; }
     public int getStructuralIntegrity() { return structuralIntegrity; }
-    
     public int getMaintenanceCost() { return maintenanceCost; }
-
+    public int getCurrentOccupants() { return currentOccupants; }
+    public List<Citizen> getOccupants() { return Collections.unmodifiableList(occupants); }
 }

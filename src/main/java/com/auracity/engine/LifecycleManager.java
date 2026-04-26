@@ -3,8 +3,8 @@ package com.auracity.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.auracity.models.agents.Citizen;
-import com.auracity.models.agents.LifeStage;
+import com.auracity.model.agent.Citizen;
+import com.auracity.model.agent.LifeStage;
 
 public class LifecycleManager
 implements TimeListener {

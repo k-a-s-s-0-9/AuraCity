@@ -1,6 +1,6 @@
 package com.auracity.engine;
 
-import com.auracity.models.agents.Citizen;
+import com.auracity.model.agent.Citizen;
 
 public class HappinessManager
 implements TimeListener {

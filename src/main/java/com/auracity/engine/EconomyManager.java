@@ -1,8 +1,8 @@
 package com.auracity.engine;
 
-import com.auracity.models.agents.Citizen;
-import com.auracity.models.agents.WorkingState;
-import com.auracity.models.buildings.Bank;
+import com.auracity.model.agent.Citizen;
+import com.auracity.model.agent.WorkingState;
+import com.auracity.model.buildings.*;;
 
 public class EconomyManager
 implements TimeListener {

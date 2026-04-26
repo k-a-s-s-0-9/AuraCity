@@ -1,17 +1,12 @@
 package com.auracity.model.buildings;
 
-import java.util.*;
-
-public class PowerPlant extends building {
-    // PowerPlant-specific properties
-    private int powerOutput;
-
-    public PowerPlant(int max_occupants, int powerOutput) {
-        super(max_occupants, 100, new ArrayList<>());
-        this.powerOutput = powerOutput;
-        maintenanceCost = 100; // default value, can be modified as needed
+public class PowerPlant extends Building {
+    public PowerPlant() {
+        super(BuildingType.POWER_PLANT);
     }
 
-    public int getPowerOutput() { return powerOutput; }
-    
+    public int getPowerOutput() { 
+        // Inherits the rate from the Enum!
+        return type.getPowerRate(); 
+    }
 }
