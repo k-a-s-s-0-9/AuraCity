@@ -4,10 +4,16 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import com.auracity.model.agent.Citizen; // Note the 'models' plural to match your bro's files
 
 public abstract class Building {
     
+    public static final Map<String, Building> REGISTRY = new ConcurrentHashMap<>();
+    private int gridX;
+    private int gridY;
+
     protected final String id;
     protected final BuildingType type; // The reference to the Blueprint
     
@@ -29,6 +35,8 @@ public abstract class Building {
         
         this.currentOccupants = 0;
         this.occupants = new ArrayList<>();
+
+        Building.REGISTRY.put(this.id, this);
     }
 
     // --- Core Logic ---
@@ -76,4 +84,11 @@ public abstract class Building {
     public int getMaintenanceCost() { return maintenanceCost; }
     public int getCurrentOccupants() { return currentOccupants; }
     public List<Citizen> getOccupants() { return Collections.unmodifiableList(occupants); }
+    
+    public void setLocation(int x, int y) {
+    this.gridX = x;
+    this.gridY = y;
+    }
+    public int getGridX() { return gridX; }
+    public int getGridY() { return gridY; }
 }

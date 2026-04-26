@@ -30,6 +30,9 @@ public class PopulationManager implements TimeListener {
         if (t.newDay()) {
             spawnCitizens();
         }
+        for (Citizen c : allCitizens) {
+            c.onTimeTick(t);
+        }
     }
 
     private void spawnCitizens() {

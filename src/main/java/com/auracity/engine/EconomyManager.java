@@ -104,6 +104,14 @@ implements TimeListener {
         }
     }
 
+
+    // Add to EconomyManager.java
+    public void deductFunds(double amount) {
+        if (cityTreasury >= amount) {
+            cityTreasury -= amount;
+        }
+    }
+
     public double getCityTreasury() {
         return cityTreasury;
     }

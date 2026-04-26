@@ -1,4 +1,4 @@
-package com.auracity.ui;
+package com.auracity;
 
 import com.auracity.engine.*;
 import com.auracity.model.buildings.Bank;
@@ -44,8 +44,8 @@ public class MainApp extends Application {
         root.setTop(topBar);
 
         // Center (Canvas)
-        GameCanvas canvas = new GameCanvas(selectionManager);
-        root.setCenter(canvas);
+        // Inside MainApp.java start() method:
+        GameCanvas canvas = new GameCanvas(selectionManager, economyManager, popManager);        root.setCenter(canvas);
 
         // Right (Sidebar)
         SidebarUI sidebar = new SidebarUI(selectionManager);

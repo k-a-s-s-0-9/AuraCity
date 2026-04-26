@@ -10,7 +10,6 @@ implements CitizenState {
         Citizen citizen,
         TimeSnapshot t
     ) {
-
         citizen.relax();
 
         if (t.hour() >= 22) {
