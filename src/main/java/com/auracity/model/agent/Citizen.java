@@ -7,9 +7,8 @@ import com.auracity.engine.ResourceManager;
 public class Citizen implements TimeListener {
 
     private final String name;
-    private final int homeId;
-    private final int workId;
-
+    private final String homeId; // Changed to String to match UUID
+    private final String workId; // Changed to String to match UUID
     private int age;
     private int daysLived;
 
@@ -26,8 +25,8 @@ public class Citizen implements TimeListener {
 
     public Citizen(
         String name,
-        int homeId,
-        int workId,
+        String homeId,
+        String workId,
         ResourceManager resources
     ) {
 
@@ -149,11 +148,11 @@ public class Citizen implements TimeListener {
         return name;
     }
 
-    public int getHomeId() {
+    public String getHomeId() {
         return homeId;
     }
 
-    public int getWorkId() {
+    public String getWorkId() {
         return workId;
     }
 

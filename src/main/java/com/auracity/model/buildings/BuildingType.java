@@ -9,8 +9,7 @@ public enum BuildingType {
     WORK_OFFICE("Commercial Office", 1500, -50, -20, 0, 50, "/assets/buildings/office.png"),
     BANK("City Bank", 2500, -40, -10, 0, 10, "/assets/buildings/bank.png"),
     GRANARY("Granary", 1000, -15, -5, 0, 5, "/assets/buildings/granary.png"),
-    WATER_FARM("Water Plant", 1500, -50, 500, 0, 15, "/assets/buildings/water_farm.png"),
-
+    WATER_FARM("Water Plant", 1500, -50, 500, 0, 15, "/assets/buildings/water_farm.png"); // <--- THIS SEMICOLON IS CRITICAL
 
     private final String label;
     private final int cost;
