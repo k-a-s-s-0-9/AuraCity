@@ -1,138 +1,38 @@
-# AuraCity
+# 🏙️ AuraCity Tycoon
 
-## 1. Project Concept
-AuraCity is a real-time strategy and management game. Players must balance four primary resources while keeping a population of "Sim-Citizens" alive and productive. Unlike static simulations, AuraCity features an active Agent-Based Model where citizens physically commute, work, and consume resources in real-time.
+A high-performance, 2D isometric city-building simulation built in Java. AuraCity Tycoon features a custom-built event-driven backend engine paired with a hardware-accelerated JavaFX frontend, emphasizing decoupled architecture and dynamic agent-based modeling.
 
-## 2. The "Living City" Tech Stack
-* Language: Java 21.
-* Rendering: Java2D (Graphics2D). We will use a BufferStrategy for smooth 60FPS animations of citizens.
-* UI: Swing + FlatLaf (Dark Mode) for the "Command Center" dashboard.
-* Sound: Java Sound API (for incident alarms and click feedback).
-* Persistence: SQLite for "Save Game" slots.
+## ✨ Core Features
 
-## 3. Key Features
+* **Custom Event-Driven Engine:** A centralized `WorldClock` utilizes a subscriber pattern to broadcast time ticks to all managers and agents, ensuring synchronized game state without heavy polling.
+* **Agent-Based Simulation:** Citizens are governed by a finite state machine (Sleeping, Commuting, Working, Recreation). They dynamically pathfind and update their behavior based on the time of day and available infrastructure.
+* **Hardware-Accelerated UI:** Replaced legacy Swing components with a JavaFX `Canvas` implementation. Utilizes an `AnimationTimer` for a buttery-smooth 60 FPS render loop and aggressive image caching to prevent memory leaks.
+* **Dynamic Grid System:** Real-time array-based grid mapping with instant collision detection and global `UUID` registry lookups for rapid agent pathing.
+* **Macro-Economy:** A fully integrated `EconomyManager` handling dynamic treasury updates, building costs, and wealth injection via migrant waves.
 
-### A. Real-time Simulation Engine
-* Tick-Based Processing: A background thread calculates resource consumption (Supply - Demand = Surplus/Deficit) every 1000ms.
-* Dynamic Scaling: Building efficiency drops as "Health" or "Resource Access" decreases.
+## 🏗️ Architecture & Design Patterns
 
-### B. Interactive Grid Canvas
-* Drag-and-Drop Placement: Users select entities from a sidebar and place them on a coordinate-based grid.
-* Contextual Inspector: Clicking a building opens a "Wrapper Class" dashboard to view real-time stats (e.g., current wattage, occupancy).
+We strictly separated the backend simulation logic from the visual rendering pipeline.
 
-### C. Incident & AI Engine
-* Strategy-Based Events: The system triggers "Strategies" (e.g., FireSpreadStrategy, GridFailureStrategy) that affect nearby grid cells.
-* Automated Response: Deployable units (Fire Trucks/Ambulances) use basic pathfinding to reach incident coordinates.
+* **The State Pattern:** `CitizenState.java` handles behavioral transitions for population agents cleanly, avoiding massive `if/else` blocks in the main update loop.
+* **The Registry Pattern:** A `ConcurrentHashMap` blueprint allows any agent to instantly look up the `(X, Y)` coordinates of any building on the map via UUID, solving the reference gap between backend logic and UI placement.
+* **The Factory Pattern:** `GameCanvas` utilizes a centralized factory method to map `BuildingType` enums to their respective class instantiations dynamically.
+* **The Singleton Pattern:** `WorldClock` ensures that all managers and agents share a single, immutable source of time.
 
-### D. Persistence Layer
-* State Snapshot: Save the entire grid (coordinates, entity types, current resources) to an SQLite .db file.
-* Auto-Save: Optional periodic background saves to prevent data loss.
+## 💻 Tech Stack
 
-### E. The Quadrant Resource System
-Each resource has a unique behavior profile:
-* Power: Instantaneous. No storage. If Supply < Demand, random buildings shut down.
-* Water: Fluid storage. Requires "Water Towers" to buffer against peak usage.
-* Food: Produced by Farms; stored in Granaries. If it hits zero, population starts dropping.
-* Money (Credits): Generated via "Taxation" ticks from working citizens. Used for repairs and expansion.
+* **Language:** Java 21
+* **UI Framework:** JavaFX (Controls & Graphics modules)
+* **Build Tool:** Maven
+* **Assets:** Isometric (64x64 PNGs)
 
-### F. The Degradation & Maintenance Loop
-Every building has a StructuralIntegrity %:
-* Passive Decay: Decreases slowly over time.
-* Heavy Load: A Power Plant running at 100% capacity decays 2\times faster.
-* The Game Loop: Users must spend Money to "Service" buildings before they hit 0% and trigger a Catastrophic Failure (Incident).
+## 🚀 How to Run (Development)
 
-## 4. The "Agent" System (Citizens & X-Ray View)
-The Commute Logic
-Citizens aren't just numbers; they are Objects with states: HOME, COMMUTING, WORKING.
-* Commute: At a specific "Tick" (e.g., 08:00 City Time), Citizen objects move from a House coordinate to a Workplace coordinate.
-* X-Ray View: When a workplace is clicked, a "Building Interior" panel opens. This utilizes a Wrapper Class that stores a List<Citizen> currently inside.
-* Visuals: The UI renders a mini-grid showing the citizens at their "stations," generating Money/Resources for the city.
+Due to Java 11+ decoupling JavaFX from the core JDK, you cannot run the `MainApp` class directly without explicitly defining module paths. We use a proxy launcher to bypass this for rapid development.
 
-## 5. Random Event "Chaos" Engine
-Events are now "Game Challenges":
-* Strike: If Food is low, workers stay home.
-* Meltdown: If a Power Plant reaches 0% integrity, it explodes, damaging adjacent tiles.
-* Epidemic: If Water is low, citizens move slower (reduced productivity).
+1.  Clone the repository and ensure your IDE has a Java Language Server active.
+2.  Run `mvn clean install` to fetch the OpenJFX dependencies defined in the `pom.xml`.
+3.  Navigate to `src/main/java/com/auracity/AuraCityTycoonLauncher.java`.
+4.  Execute the `Launcher` class via your IDE (Do not run `MainApp` directly). 
 
-## 6. Core Entities for AuraCity
-* Citizen (Agent): The lifeblood of the city. Tracks Name, JobID, HomeID, and current state (HOME, COMMUTING, WORKING). Includes Health and Happiness stats.
-* Residential Buildings: Town House (Basic) and Apartment Complex (High Density). These serve as the "Home" for your citizens.
-* Production Buildings: Farm (Food), Power Plant (Power), and Water Plant (Water). These generate the primary resources.
-* Storage & Buffers: Granary (Food), Water Tower (Water), and Battery Bank (Power). These allow the city to handle spikes in demand.
-* Employment Hubs: Work Office (Standard income) and Factory (High income but faster structural degradation).
-* Essential Services: Hospital (Restores citizen health) and Maintenance Center (Reduces the degradation rate of nearby structures).
-* Infrastructure: Roads (Essential for citizen pathfinding) and Connectors (Pipes/Lines for dependency mapping).
-* The Engines: Incident Engine (Chaos generator) and Resource Manager (The global Observer that tracks city-wide stats).
-
-## 7. File structure
-
-```
-
-AuraCity/
-├── pom.xml                        # Maven dependencies (FlatLaf, SQLite, JUnit)
-├── src/
-│   ├── main/
-│   │   ├── java/com/auracity/
-│   │   │   ├── Main.java          # Entry point (Initializes Engine & UI)
-│   │   │   │
-│   │   │   ├── engine/            # Logic & Simulation Heartbeat
-│   │   │   │   ├── SimulationEngine.java
-│   │   │   │   ├── ResourceManager.java (Observer)
-│   │   │   │   ├── TimeSystem.java
-│   │   │   │   └── IncidentDirector.java
-│   │   │   │
-│   │   │   ├── models/            # Data & Entities (The "What")
-│   │   │   │   ├── agents/
-│   │   │   │   │   └── Citizen.java
-│   │   │   │   ├── buildings/
-│   │   │   │   │   ├── Building.java (Abstract)
-│   │   │   │   │   ├── ProductionBuilding.java
-│   │   │   │   │   └── ResidentialBuilding.java
-│   │   │   │   └── common/
-│   │   │   │       ├── Vector2D.java (For coordinates)
-│   │   │   │       └── ResourceType.java (Enum)
-│   │   │   │
-│   │   │   ├── ui/                # Swing & Rendering (The "Look")
-│   │   │   │   ├── GameWindow.java
-│   │   │   │   ├── MapCanvas.java (Custom Java2D Painter)
-│   │   │   │   ├── SidebarPanel.java
-│   │   │   │   └── XRayPanel.java (Interior View)
-│   │   │   │
-│   │   │   ├── db/                # Persistence
-│   │   │   │   ├── DatabaseHandler.java
-│   │   │   │   └── SaveLoadService.java
-│   │   │   │
-│   │   │   └── util/              # Helpers
-│   │   │       ├── Pathfinding.java (A* or BFS)
-│   │   │       └── ConfigLoader.java
-│   │   │
-│   │   └── resources/             # Assets
-│   │       ├── icons/             # Building/Citizen sprites
-│   │       ├── themes/            # FlatLaf properties
-│   │       └── data/              # Default SQLite DB file
-│   │
-│   └── test/java/com/auracity/    # JUnit Tests
-
-
-```
-
-
-
-
-## 6. Production Phases
-
-### Phase 1: The Foundation (Core OOP)
-* Member A: Create the Citizen agent class and the ResourceManager (The Observer).
-* Member B: Build the Custom MapPanel that can render different "layers" (Buildings vs. Citizens).
-
-### Phase 2: The Working World (Logic & UI)
-* Member A: Implement the "Work Schedule" logic.
-* Member B: Create the X-Ray Dashboard. Build the UI that pops up when a building is selected to show the internal "Wrapper" data.
-
-### Phase 3: The Economy & Chaos (Gameplay)
-* Member A: Implement the Degradation Variable and the Strategy Pattern for random incidents.
-* Member B: Integrate the SQLite Save/Load system and the "Build Menu."
-
-### Phase 4: Juice & Polish
-* Both: Add animations for walking citizens, "Warning" icons for decaying buildings, and balance the resource costs.
-
+*Note for VS Code users: Use the native "Run Java" Code Lens or the "Java Projects" sidebar, rather than raw terminal `javac` commands, to ensure Maven classpath synchronization.*
