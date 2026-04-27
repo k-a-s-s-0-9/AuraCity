@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
-import com.auracity.model.agent.Citizen; // Note the 'models' plural to match your bro's files
+import com.auracity.model.agent.Citizen;
 
 public abstract class Building {
     
