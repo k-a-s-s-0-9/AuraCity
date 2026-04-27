@@ -1,59 +1,163 @@
-package com.auracity.model.agent;
+package com.auracity.models.agents;
 
-import java.util.UUID;
-import com.auracity.model.buildings.Housing;
+import com.auracity.engine.TimeListener;
+import com.auracity.engine.TimeSnapshot;
+import com.auracity.engine.ResourceManager;
 
-public class Citizen {
-    // Unique identifier for tracking specific agents
-    private final String id;
-    private String name;
-    
-    // Using an Enum for strict state control
-    public enum State { HOME, COMMUTING, WORKING }
-    private State currentState;
+public class Citizen implements TimeListener {
 
-    // References to grid coordinates or building IDs
-    private String homeId;
-    private String jobId;
+    private final String name;
+    private final int homeId;
+    private final int workId;
 
-    // Core agent metrics (0.0 to 100.0)
-    private double health;
+    private int age;
+    private int daysLived;
+
+    private boolean alive;
+    private LifeStage stage;
+
+    private double stamina;
     private double happiness;
+    private double wallet;
 
-    public Citizen(String name, String homeId) {
-        this.id = UUID.randomUUID().toString();
+    private final ResourceManager resources;
+
+    private CitizenState currentState;
+
+    public Citizen(
+        String name,
+        int homeId,
+        int workId,
+        ResourceManager resources
+    ) {
+
         this.name = name;
         this.homeId = homeId;
-        this.currentState = State.HOME;
-        this.health = 100.0;
-        this.happiness = 100.0;
+        this.workId = workId;
+        this.resources = resources;
+
+        this.age = 18;
+        this.daysLived = 0;
+        this.alive = true;
+        this.stage = LifeStage.ADULT;
+
+        this.stamina = 1.0;
+        this.happiness = 1.0;
+        this.wallet = 0.0;
+
+        this.currentState = new SleepingState();
     }
 
-    // Convenience constructor that accepts a Housing instance
-    public Citizen(String name, Housing home) {
-        this(name, home.getId());
+    @Override
+    public void onTimeTick(TimeSnapshot t) {
+
+        if (alive) {
+            currentState.handle(this, t);
+        }
     }
 
-    // Synchronized methods to prevent the UI thread from reading a half-updated state while the simulation tick is modifying it.
-    public synchronized void updateState(State newState) {
-        this.currentState = newState;
+    // -------- Lifecycle --------
+
+    public void incrementDaysLived() {
+        daysLived++;
     }
 
-    public synchronized State getCurrentState() {
+    public void ageUp() {
+        age++;
+        if (age >= 65) {
+            stage = LifeStage.SENIOR;
+        }
+    }
+
+    public void die() {
+        alive = false;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getDaysLived() {
+        return daysLived;
+    }
+
+    public LifeStage getStage() {
+        return stage;
+    }
+
+    // -------- State --------
+
+    public void setState(CitizenState state) {
+        this.currentState = state;
+    }
+
+    public CitizenState getState() {
         return currentState;
     }
 
-    public synchronized void modifyHealth(double amount) {
-        this.health = Math.max(0, Math.min(100, this.health + amount));
+    // -------- Economy --------
+
+    public void addMoney(double amount) {
+        wallet += amount;
     }
 
-    // Getters and Setters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getHomeId() { return homeId; }
-    public String getJobId() { return jobId; }
-    public synchronized double getHealth() { return health; }
-    public synchronized double getHappiness() { return happiness; }
-    public void setJobId(String jobId) { this.jobId = jobId; }
+    public void withdrawMoney(double amount) {
+        wallet -= amount;
+        if (wallet < 0) {
+            wallet = 0;
+        }
+    }
 
+    public double getWallet() {
+        return wallet;
+    }
+
+    // -------- Happiness --------
+
+    public void setHappiness(double value) {
+        happiness = value;
+    }
+
+    public double getHappiness() {
+        return happiness;
+    }
+
+    // -------- Behavior --------
+
+    public void recover() {
+        stamina += 0.05;
+        if (stamina > 1.0) stamina = 1.0;
+    }
+
+    public void work() {
+        stamina -= 0.03;
+        if (stamina < 0) stamina = 0;
+    }
+
+    public void relax() {
+        happiness += 0.02;
+        if (happiness > 1.0) happiness = 1.0;
+    }
+
+    // -------- Getters --------
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHomeId() {
+        return homeId;
+    }
+
+    public int getWorkId() {
+        return workId;
+    }
+
+    public ResourceManager getResources() {
+        return resources;
+    }
 }

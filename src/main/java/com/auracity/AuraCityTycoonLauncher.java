@@ -1,48 +1,71 @@
 package com.auracity;
 
 import com.auracity.engine.ResourceManager;
+import com.auracity.models.buildings.PowerPlant;
+import com.auracity.models.buildings.FoodFarms;
 import com.auracity.ui.MapPanel;
+import com.auracity.ui.InfoPanel;
+import com.auracity.ui.RenderableBuilding;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 
 public class AuraCityTycoonLauncher {
 
     public static void main(String[] args) {
-        // Swing UI creation must always happen on the Event Dispatch Thread (EDT)
+
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
         });
     }
 
     private static void createAndShowGUI() {
-        // 1. Initialize the Core Engine (Invisible in this phase, but ready)
-        ResourceManager resourceManager = new ResourceManager();
-        System.out.println("AuraCity Engine Initialized. Starting Funds: " + 
-                           resourceManager.getResourceSurplus("Money"));
 
-        // 2. Set up the Window
+        // ---------------- ENGINE ----------------
+        ResourceManager resources = new ResourceManager();
+
+        System.out.println(
+            "AuraCity Engine Initialized. Starting Funds: " +
+            resources.getResourceSurplus("Money")
+        );
+
+        // ---------------- WINDOW ----------------
         JFrame frame = new JFrame("AuraCity - Command Center (Pre-Alpha)");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false); // Lock it for now to keep grid math simple
+        frame.setLayout(new BorderLayout());
 
-        // 3. Initialize and add the Canvas
-        MapPanel mapPanel = new MapPanel();
-        mapPanel.setPreferredSize(new Dimension(800, 800)); // 50 tiles * 16px (or just a fixed size for now)
-        frame.add(mapPanel);
+        // ---------------- UI PANELS ----------------
+        InfoPanel infoPanel = new InfoPanel();
+        MapPanel mapPanel = new MapPanel(infoPanel);
 
-        // 4. Pack and Display
+        mapPanel.setPreferredSize(new Dimension(800, 800));
+
+        frame.add(mapPanel, BorderLayout.CENTER);
+        frame.add(infoPanel, BorderLayout.EAST);
+
+        // ---------------- BUILDINGS (REAL OBJECTS) ----------------
+        PowerPlant plant = new PowerPlant(1, resources);
+        FoodFarms farm = new FoodFarms(2, resources);
+
+        RenderableBuilding r1 =
+            new RenderableBuilding(plant, 5, 5);
+
+        RenderableBuilding r2 =
+            new RenderableBuilding(farm, 10, 8);
+
+        mapPanel.addBuilding(r1);
+        mapPanel.addBuilding(r2);
+
+        // ---------------- DISPLAY ----------------
         frame.pack();
-        frame.setLocationRelativeTo(null); // Center on screen
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // 5. Start the Render Loop (Targeting ~60 FPS)
-        // 1000ms / 60 = ~16ms per frame
+        // ---------------- RENDER LOOP ----------------
         Timer renderLoop = new Timer(16, e -> {
             mapPanel.refreshFrame();
         });
+
         renderLoop.start();
     }
 }
