@@ -48,14 +48,13 @@ public class MainApp extends Application {
         GameCanvas canvas = new GameCanvas(selectionManager, economyManager, popManager);        root.setCenter(canvas);
 
         // Right (Sidebar)
-        SidebarUI sidebar = new SidebarUI(selectionManager);
+        SidebarUI sidebar = new SidebarUI(selectionManager, popManager);
         root.setRight(sidebar);
 
         // --- 3. THE GAME LOOP (60 FPS) ---
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // Update the Top Bar with live data from the Engine
                 String stats = String.format("Treasury: $%.0f | Time: Day %d %02d:%02d", 
                     economyManager.getCityTreasury(), 
                     clock.getDay(), 
@@ -63,7 +62,9 @@ public class MainApp extends Application {
                     clock.getMinutes() % 60);
                 topStatsLabel.setText(stats);
 
-                // Command the canvas to redraw everything
+                // -> ADD THIS LINE: Keep the Sidebar data live!
+                sidebar.updateHUD();
+
                 canvas.render();
             }
         }.start();

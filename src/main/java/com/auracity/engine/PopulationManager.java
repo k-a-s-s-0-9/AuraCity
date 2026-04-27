@@ -37,20 +37,30 @@ public class PopulationManager implements TimeListener {
 
     private void spawnCitizens() {
         for (Housing home : homes) {
-            
-            // Using the standard methods inherited from Building.java
             if (home.hasSpace()) {
                 
+                // --- NEW LOGIC: Find a valid workplace ---
+                String assignedWorkId = "UNEMPLOYED";
+                for (com.auracity.model.buildings.Building b : com.auracity.model.buildings.Building.REGISTRY.values()) {
+                    // If it's a workplace, assign it (You can make this logic smarter later to check capacity)
+                    if (b.getType() == com.auracity.model.buildings.BuildingType.WORK_OFFICE || 
+                        b.getType() == com.auracity.model.buildings.BuildingType.POWER_PLANT ||
+                        b.getType() == com.auracity.model.buildings.BuildingType.FARM) {
+                        assignedWorkId = b.getId();
+                        break; 
+                    }
+                }
+                // -----------------------------------------
+
                 Citizen citizen = new Citizen(
                     "Citizen-" + citizenCounter,
-                    home.getId(), // CHANGED: Was getBuildingId(), now uses standard UUID String
-                    "UNEMPLOYED", // CHANGED: Was an integer '1', must be a String now
+                    home.getId(), 
+                    assignedWorkId, // Now passing a real building UUID!
                     resources
                 );
 
                 citizenCounter++;
-                
-                home.addOccupant(citizen); // CHANGED: Was addResident(), now uses standard method
+                home.addOccupant(citizen); 
                 allCitizens.add(citizen);
             }
         }
@@ -62,5 +72,35 @@ public class PopulationManager implements TimeListener {
 
     public List<Citizen> getCitizens() {
         return allCitizens;
+    }
+    public void triggerMigrants(double startingCash) {
+        int newArrivals = 0;
+        
+        for (com.auracity.model.buildings.Housing home : homes) {
+            while (home.hasSpace()) {
+                // Find them a job instantly
+                String assignedWorkId = "UNEMPLOYED";
+                for (com.auracity.model.buildings.Building b : com.auracity.model.buildings.Building.REGISTRY.values()) {
+                    if (b.getType() == com.auracity.model.buildings.BuildingType.WORK_OFFICE || 
+                        b.getType() == com.auracity.model.buildings.BuildingType.POWER_PLANT ||
+                        b.getType() == com.auracity.model.buildings.BuildingType.FARM) {
+                        assignedWorkId = b.getId();
+                        break; 
+                    }
+                }
+
+                // Spawn migrant, give cash, move them in
+                com.auracity.model.agent.Citizen migrant = new com.auracity.model.agent.Citizen(
+                    "Migrant-" + citizenCounter, home.getId(), assignedWorkId, resources
+                );
+                migrant.addMoney(startingCash);
+                
+                citizenCounter++;
+                home.addOccupant(migrant);
+                allCitizens.add(migrant);
+                newArrivals++;
+            }
+        }
+        System.out.println("🚢 " + newArrivals + " wealthy migrants have moved into AuraCity!");
     }
 }

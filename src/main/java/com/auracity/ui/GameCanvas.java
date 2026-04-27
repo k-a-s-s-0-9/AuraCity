@@ -154,6 +154,22 @@ public class GameCanvas extends Canvas {
             // We subtract 5 to ensure the circle's center is exactly at c.getX()
             gc.fillOval(c.getX() - 5, c.getY() - 5, 10, 10); 
         }
+        
+        // 5. Draw the X-Ray Inspection HUD
+        if (!selectionManager.isBuildMode() && selectionManager.getSelectedEntity() instanceof Building) {
+            Building inspected = (Building) selectionManager.getSelectedEntity();
+            
+            // Draw a semi-transparent dark panel
+            gc.setFill(Color.rgb(44, 62, 80, 0.9)); 
+            gc.fillRect(20, 20, 250, 120);
+            
+            // Draw the text
+            gc.setFill(Color.WHITE);
+            gc.fillText("INSPECTING: " + inspected.getType().getLabel(), 35, 45);
+            gc.fillText("Building ID: " + inspected.getId().substring(0, 8) + "...", 35, 70);
+            gc.fillText("Integrity: " + inspected.getStructuralIntegrity() + "%", 35, 95);
+            gc.fillText("Occupants: " + inspected.getCurrentOccupants() + " / " + inspected.getType().getMaxOccupants(), 35, 120);
+        }
     }
 
     // --- TESTING TOOLS ---
