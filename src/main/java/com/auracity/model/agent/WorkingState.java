@@ -28,9 +28,9 @@ implements CitizenState {
 
         if (t.hour() >= 17) {
 
-            citizen.setState(
-                new RecreationState()
-            );
+            System.out.println(citizen.getName() + " is clocking out.");
+            citizen.setTargetBuilding(citizen.getHomeId());
+            citizen.setState(new CommutingState()); // Or RecreationState
         }
     }
 

@@ -9,6 +9,7 @@ import com.auracity.model.agent.Citizen;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -72,6 +73,13 @@ public class GameCanvas extends Canvas {
                     selectionManager.selectEntity(clickedBuilding);
                     System.out.println("Inspecting: " + clickedBuilding.getType().getLabel());
                 }
+            }
+        });
+        
+        this.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) { // Right Click
+            selectionManager.setBuildMode(null);
+            System.out.println("Build mode cancelled.");
             }
         });
 

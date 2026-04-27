@@ -46,7 +46,7 @@ public class SidebarUI extends VBox {
         migrantBtn.setMaxWidth(Double.MAX_VALUE);
         migrantBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;");
         // Pass $1000 starting cash to every migrant
-        migrantBtn.setOnAction(e -> popManager.triggerMigrants(1000.0));
+        migrantBtn.setOnAction(e -> popManager.triggerMigrants(5));
         
         VBox.setMargin(migrantBtn, new Insets(15, 0, 0, 0)); // Add some space above it
         getChildren().add(migrantBtn);

@@ -3,6 +3,7 @@ package com.auracity.engine;
 import com.auracity.model.buildings.BuildingType;
 import com.auracity.model.agent.Citizen;
 
+
 public class SelectionManager {
     private Object hoveredEntity;      // What the mouse is over
     private Object selectedEntity;     // What is clicked (Inspection)
@@ -17,6 +18,7 @@ public class SelectionManager {
         this.selectedEntity = obj;
         this.buildModeType = null; // Exit build mode when inspecting
     }
+    
 
     public BuildingType getBuildModeType() { return buildModeType; }
     public Object getSelectedEntity() { return selectedEntity; }
